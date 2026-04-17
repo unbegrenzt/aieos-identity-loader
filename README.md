@@ -3,12 +3,12 @@
 > Load AIEOS identities into opencode agents
 
 [![License: MIT-0](https://img.shields.io/badge/License-MIT--0-blue.svg)](LICENSE)
-[![Version 1.0.0](https://img.shields.io/badge/version-1.0.0-brightgreen.svg)](SKILL.md)
+[![Version 1.0.1](https://img.shields.io/badge/version-1.0.1-brightgreen.svg)](SKILL.md)
 
 ## Install
 
 ```bash
-npx skills add aieos-integration
+npx skills add aieos-identity-loader
 ```
 
 Or copy `SKILL.md` to `.opencode/skills/aieos-identity-loader/`
@@ -31,6 +31,14 @@ Or copy `SKILL.md` to `.opencode/skills/aieos-identity-loader/`
 | Version | `standard.version` starts with `1.2` |
 | Fields | `identity.names.first`, `psychology.traits.ocean` |
 | Values | OCEAN traits: 0-1 |
+
+## Security
+
+| Check | Limit |
+|-------|-------|
+| Path traversal | Reject paths escaping project root |
+| File size | Max 1MB |
+| Content | Sanitized for prompt injection |
 
 ## Examples
 

@@ -3,7 +3,7 @@ name: aieos-identity-loader
 description: Load and apply AIEOS identity from JSON to the agent
 license: MIT-0
 compatibility: opencode >=2.0
-version: 1.0.0
+version: 1.0.1
 tags: [identity, personality, aieos]
 ---
 
@@ -30,6 +30,23 @@ Must have:
 - `psychology.traits.ocean` (all 5 traits, 0-1 values)
 
 Optional fields get defaults: formality 0.5, missing OCEAN → 0.5
+
+## Security
+
+### Path Validation
+- Normalize path with `path.resolve()`
+- Reject if resolved path escapes project root
+- Error: `Path escapes project directory: {path}`
+
+### File Size Limit
+- Max file size: 1MB (1048576 bytes)
+- Error: `File too large: {size}. Max allowed: 1MB`
+
+### Content Sanitization
+Before adding to system prompt:
+- Escape: `\` → `\\`, `"` → `\"`, `{` → `\{`, `}` → `\}`
+- Reject fields containing: "You are", "Ignore", "System:", "Prompt:", "##", "###"
+- Truncate each text field to 500 chars max
 
 ## What to Extract
 
