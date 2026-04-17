@@ -3,7 +3,7 @@
 > Load AIEOS identities into opencode agents
 
 [![License: MIT-0](https://img.shields.io/badge/License-MIT--0-blue.svg)](LICENSE)
-[![Version 1.0.1](https://img.shields.io/badge/version-1.0.1-brightgreen.svg)](SKILL.md)
+[![Version 1.0.2](https://img.shields.io/badge/version-1.0.2-brightgreen.svg)](SKILL.md)
 
 ## Install
 
@@ -32,10 +32,12 @@ Or copy `SKILL.md` to `.opencode/skills/aieos-identity-loader/`
 | Fields | `identity.names.first`, `psychology.traits.ocean` |
 | Values | OCEAN traits: 0-1 |
 
-## Security
+## Security (v1.0.2)
 
 | Check | Limit |
 |-------|-------|
+| Field whitelist | Only allowed fields extracted |
+| Secret detection | API keys, tokens, passwords rejected |
 | Path traversal | Reject paths escaping project root |
 | File size | Max 1MB |
 | Content | Sanitized for prompt injection |

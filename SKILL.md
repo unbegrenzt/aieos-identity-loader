@@ -3,7 +3,7 @@ name: aieos-identity-loader
 description: Load and apply AIEOS identity from JSON to the agent
 license: MIT-0
 compatibility: opencode >=2.0
-version: 1.0.1
+version: 1.0.2
 tags: [identity, personality, aieos]
 ---
 
@@ -31,22 +31,56 @@ Must have:
 
 Optional fields get defaults: formality 0.5, missing OCEAN → 0.5
 
-## Security
+## Security (v1.0.2 - W007 Fix)
 
-### Path Validation
-- Normalize path with `path.resolve()`
-- Reject if resolved path escapes project root
-- Error: `Path escapes project directory: {path}`
+### 1. Field Whitelist
+Only extract these EXACT fields. All other fields: IGNORE (not extracted).
 
-### File Size Limit
-- Max file size: 1MB (1048576 bytes)
-- Error: `File too large: {size}. Max allowed: 1MB`
+**Identity:**
+- identity.names.first
+- identity.names.nickname
 
-### Content Sanitization
-Before adding to system prompt:
+**Psychology:**
+- psychology.traits.ocean.openness
+- psychology.traits.ocean.conscientiousness
+- psychology.traits.ocean.extraversion
+- psychology.traits.ocean.agreeableness
+- psychology.traits.ocean.neuroticism
+- psychology.traits.mbti
+
+**Linguistics:**
+- linguistics.text_style.formality_level
+- linguistics.text_style.vocabulary_level
+- linguistics.text_style.style_descriptors
+- linguistics.idiolect.catchphrases
+
+**History:**
+- history.origin_story
+
+### 2. Secret Detection
+Before adding ANY value to system prompt, scan for secrets:
+
+| Pattern | Regex | Action |
+|---------|-------|--------|
+| API Key | `[a-zA-Z0-9_-]{32,}` | Reject |
+| JWT Token | `eyJ[A-Za-z0-9_-]+\.eyJ` | Reject |
+| Password | `"password"\s*:` | Reject |
+| API Key Field | `"api[_-]?key"\s*:` | Reject |
+| Token Field | `"(access[_-]?token|auth[_-]?token)"\s*:` | Reject |
+| Secret Field | `"secret"\s*:` | Reject |
+
+**Error**: `Secret detected in field: {path}. Operation rejected.`
+
+### 3. Path Validation
+- Normalize with `path.resolve()`
+- Reject paths escaping project root
+
+### 4. File Size Limit
+- Max: 1MB (1048576 bytes)
+
+### 5. Content Sanitization
 - Escape: `\` → `\\`, `"` → `\"`, `{` → `\{`, `}` → `\}`
-- Reject fields containing: "You are", "Ignore", "System:", "Prompt:", "##", "###"
-- Truncate each text field to 500 chars max
+- Truncate each field to 500 chars max
 
 ## What to Extract
 
